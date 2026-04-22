@@ -51,7 +51,10 @@ import { createPortal } from 'react-dom';
 
 import { AdminConfig, AdminConfigResult } from '@/lib/admin.types';
 import { getAuthInfoFromBrowserCookie } from '@/lib/auth';
-import { FEATURE_PERMISSION_OPTIONS } from '@/lib/feature-permissions';
+import {
+  ALL_FEATURE_PERMISSION_KEYS,
+  FEATURE_PERMISSION_OPTIONS,
+} from '@/lib/feature-permissions';
 
 import AnimeSubscriptionComponent from '@/components/AnimeSubscriptionComponent';
 import CorrectDialog from '@/components/CorrectDialog';
@@ -118,6 +121,8 @@ const buttonStyles = {
   quickAction:
     'px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors',
 };
+
+const DEFAULT_GROUP_PERMISSIONS = [...ALL_FEATURE_PERMISSION_KEYS];
 
 // 通用弹窗组件
 interface AlertModalProps {
@@ -506,7 +511,7 @@ const UserConfig = ({ config, role, refreshConfig, usersV2, userPage, userTotalP
   const [newUserGroup, setNewUserGroup] = useState({
     name: '',
     enabledApis: [] as string[],
-    permissions: FEATURE_PERMISSION_OPTIONS.map((item) => item.key) as string[],
+    permissions: [...DEFAULT_GROUP_PERMISSIONS] as string[],
   });
   const [editingUserGroup, setEditingUserGroup] = useState<{
     name: string;
@@ -608,7 +613,7 @@ const UserConfig = ({ config, role, refreshConfig, usersV2, userPage, userTotalP
           setNewUserGroup({
             name: '',
             enabledApis: [],
-            permissions: FEATURE_PERMISSION_OPTIONS.map((item) => item.key),
+            permissions: [...DEFAULT_GROUP_PERMISSIONS],
           });
           setShowAddUserGroupForm(false);
         } else if (action === 'edit') {
@@ -1957,7 +1962,7 @@ const UserConfig = ({ config, role, refreshConfig, usersV2, userPage, userTotalP
               setNewUserGroup({
                 name: '',
                 enabledApis: [],
-                permissions: FEATURE_PERMISSION_OPTIONS.map((item) => item.key),
+                permissions: [...DEFAULT_GROUP_PERMISSIONS],
               });
             }}
           >
@@ -1976,7 +1981,7 @@ const UserConfig = ({ config, role, refreshConfig, usersV2, userPage, userTotalP
                       setNewUserGroup({
                         name: '',
                         enabledApis: [],
-                        permissions: FEATURE_PERMISSION_OPTIONS.map((item) => item.key),
+                        permissions: [...DEFAULT_GROUP_PERMISSIONS],
                       });
                     }}
                     className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors'
@@ -2055,6 +2060,32 @@ const UserConfig = ({ config, role, refreshConfig, usersV2, userPage, userTotalP
                           </div>
                         </label>
                       ))}
+                    </div>
+                    <div className='mt-4 flex space-x-2'>
+                      <button
+                        type='button'
+                        onClick={() =>
+                          setNewUserGroup((prev) => ({
+                            ...prev,
+                            permissions: [],
+                          }))
+                        }
+                        className={buttonStyles.quickAction}
+                      >
+                        全不选
+                      </button>
+                      <button
+                        type='button'
+                        onClick={() =>
+                          setNewUserGroup((prev) => ({
+                            ...prev,
+                            permissions: [...DEFAULT_GROUP_PERMISSIONS],
+                          }))
+                        }
+                        className={buttonStyles.quickAction}
+                      >
+                        全选
+                      </button>
                     </div>
                   </div>
 
@@ -2147,7 +2178,7 @@ const UserConfig = ({ config, role, refreshConfig, usersV2, userPage, userTotalP
                         setNewUserGroup({
                           name: '',
                           enabledApis: [],
-                          permissions: FEATURE_PERMISSION_OPTIONS.map((item) => item.key),
+                          permissions: [...DEFAULT_GROUP_PERMISSIONS],
                         });
                       }}
                       className={`px-6 py-2.5 text-sm font-medium ${buttonStyles.secondary}`}
@@ -2356,6 +2387,35 @@ const UserConfig = ({ config, role, refreshConfig, usersV2, userPage, userTotalP
                           </div>
                         </label>
                       ))}
+                    </div>
+                    <div className='mt-4 flex space-x-2'>
+                      <button
+                        type='button'
+                        onClick={() =>
+                          setEditingUserGroup((prev) =>
+                            prev ? { ...prev, permissions: [] } : null
+                          )
+                        }
+                        className={buttonStyles.quickAction}
+                      >
+                        全不选
+                      </button>
+                      <button
+                        type='button'
+                        onClick={() =>
+                          setEditingUserGroup((prev) =>
+                            prev
+                              ? {
+                                  ...prev,
+                                  permissions: [...DEFAULT_GROUP_PERMISSIONS],
+                                }
+                              : null
+                          )
+                        }
+                        className={buttonStyles.quickAction}
+                      >
+                        全选
+                      </button>
                     </div>
                   </div>
 
